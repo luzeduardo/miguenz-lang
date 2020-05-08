@@ -24,11 +24,19 @@ func (l *Lexer) readChar() {
 		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
-	l.readPosition += 1
+	l.readPosition++
+}
+
+func (l *Lexer) ignoreWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
 }
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
+
+	l.ignoreWhitespace()
 
 	switch l.ch {
 	case '=':

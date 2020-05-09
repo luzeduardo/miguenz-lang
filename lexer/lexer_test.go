@@ -45,7 +45,6 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "x"},
 		{token.PLUS, "+"},
 		{token.IDENT, "y"},
-		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.SEMICOLON, ";"},
 
@@ -55,7 +54,7 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "add"},
 		{token.LPAREN, "("},
 		{token.IDENT, "one"},
-		{token.PLUS, "+"},
+		{token.COMMA, ","},
 		{token.IDENT, "two"},
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
@@ -67,13 +66,13 @@ func TestNextToken(t *testing.T) {
 		tok := l.NextToken()
 
 		if tok.Type != tt.expectedType {
-			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q",
-				i, tt.expectedType, tok.Type)
+			t.Fatalf("tests[%d] - tokentype wrong for char: [%q]. expected=%q, got=%q",
+				i, tok.Literal, tt.expectedType, tok.Type)
 		}
 
 		if tok.Literal != tt.expectedLiteral {
-			t.Fatalf("tests[%d] - lireal wrong. expected=%q, got=%q",
-				i, tt.expectedLiteral, tok.Literal)
+			t.Fatalf("tests[%d] - lireal wrong for char: [%q]. expected=%q, got=%q",
+				i, tok.Literal, tt.expectedLiteral, tok.Literal)
 		}
 	}
 }

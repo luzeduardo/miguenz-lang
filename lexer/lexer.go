@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"miguenz-lang/token"
+	"strings"
 )
 
 type Lexer struct {
@@ -50,14 +51,33 @@ func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+func (l *Lexer) peekNextChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 	l.ignoreWhitespace()
-
+	var sb strings.Builder
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
+		if l.peekNextChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			sb.WriteByte(ch)
+			sb.WriteByte(l.ch)
+			tok = token.Token{
+				Type:    token.EQ,
+				Literal: sb.String(),
+			}
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
 	case '(':
@@ -75,7 +95,18 @@ func (l *Lexer) NextToken() token.Token {
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '!':
-		tok = newToken(token.BANG, l.ch)
+		if l.peekNextChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			sb.WriteByte(ch)
+			sb.WriteByte(l.ch)
+			tok = token.Token{
+				Type:    token.NOT_EQ,
+				Literal: sb.String(),
+			}
+		} else {
+			tok = newToken(token.BANG, l.ch)
+		}
 	case '/':
 		tok = newToken(token.SLASH, l.ch)
 	case '*':
@@ -99,7 +130,7 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		return tok
 	}
-
+	sb.Reset()
 	l.readChar()
 	return tok
 }

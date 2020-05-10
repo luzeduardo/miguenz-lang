@@ -24,6 +24,9 @@ func TestNextToken(t *testing.T) {
 		return false;
 	}
 
+	4 == 4;
+	5 != 3;
+
 	`
 
 	tests := []struct {
@@ -80,7 +83,33 @@ func TestNextToken(t *testing.T) {
 		{token.GT, ">"},
 		{token.INT, "1"},
 
-		{token.EOF, ""},
+		{token.IF, "if"},
+		{token.LPAREN, "("},
+		{token.INT, "1"},
+		{token.LT, "<"},
+		{token.INT, "2"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.TRUE, "true"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+		{token.ELSE, "else"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.FALSE, "false"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+
+		{token.INT, "4"},
+		{token.EQ, "=="},
+		{token.INT, "4"},
+		{token.SEMICOLON, ";"},
+
+		{token.INT, "5"},
+		{token.NOT_EQ, "!="},
+		{token.INT, "3"},
+		{token.SEMICOLON, ";"},
 	}
 
 	l := New(input)
@@ -93,7 +122,7 @@ func TestNextToken(t *testing.T) {
 		}
 
 		if tok.Literal != tt.expectedLiteral {
-			t.Fatalf("tests[%d] - lireal wrong for char: [%q]. expected=%q, got=%q",
+			t.Fatalf("tests[%d] - literal wrong for char: [%q]. expected=%q, got=%q",
 				i, tok.Literal, tt.expectedLiteral, tok.Literal)
 		}
 	}
